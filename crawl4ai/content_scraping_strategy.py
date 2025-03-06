@@ -43,7 +43,7 @@ def fetch_image_file_size(img, base_url):
     #If src is relative path construct full URL, if not it may be CDN URL
     img_url = urljoin(base_url,img.get('src'))
     try:
-        response = requests.head(img_url)
+        response = requests.head(img_url, timeout=60)
         if response.status_code == 200:
             return response.headers.get('Content-Length',None)
         else:
