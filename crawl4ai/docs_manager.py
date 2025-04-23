@@ -1,8 +1,8 @@
-import requests
 import shutil
 from pathlib import Path
 from crawl4ai.async_logger import AsyncLogger
 from crawl4ai.llmtxt import AsyncLLMTextManager
+from security import safe_requests
 
 class DocsManager:
     def __init__(self, logger=None):
@@ -34,7 +34,7 @@ class DocsManager:
                 return True
 
             # Fallback to GitHub
-            response = requests.get(
+            response = safe_requests.get(
                 "https://api.github.com/repos/unclecode/crawl4ai/contents/docs/llm.txt",
                 headers={'Accept': 'application/vnd.github.v3+json'}
             )
@@ -42,7 +42,7 @@ class DocsManager:
             
             for item in response.json():
                 if item['type'] == 'file' and item['name'].endswith('.md'):
-                    content = requests.get(item['download_url']).text
+                    content = safe_requests.get(item['download_url']).text
                     with open(self.docs_dir / item['name'], 'w', encoding='utf-8') as f:
                         f.write(content)
             return True
