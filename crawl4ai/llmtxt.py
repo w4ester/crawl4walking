@@ -18,6 +18,7 @@ import pickle
 import hashlib  # <--- ADDED for file-hash
 from fnmatch import fnmatch
 import glob
+import fickling
 
 litellm.set_verbose = False
 
@@ -200,7 +201,7 @@ Wrap your response in <index>...</index> tags.
         if not clear_cache and os.path.exists(self.bm25_index_file):
             self.logger.info("Loading existing BM25 index from disk.")
             with open(self.bm25_index_file, "rb") as f:
-                data = pickle.load(f)
+                data = fickling.load(f)
             self.tokenized_facts = data["tokenized_facts"]
             self.bm25_index = data["bm25_index"]
             return True
