@@ -36,13 +36,13 @@ class DocsManager:
             # Fallback to GitHub
             response = requests.get(
                 "https://api.github.com/repos/unclecode/crawl4ai/contents/docs/llm.txt",
-                headers={'Accept': 'application/vnd.github.v3+json'}
-            )
+                headers={'Accept': 'application/vnd.github.v3+json'}, 
+            timeout=60)
             response.raise_for_status()
             
             for item in response.json():
                 if item['type'] == 'file' and item['name'].endswith('.md'):
-                    content = requests.get(item['download_url']).text
+                    content = requests.get(item['download_url'], timeout=60).text
                     with open(self.docs_dir / item['name'], 'w', encoding='utf-8') as f:
                         f.write(content)
             return True

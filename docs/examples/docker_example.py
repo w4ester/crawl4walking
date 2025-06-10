@@ -14,7 +14,7 @@ class Crawl4AiTester:
         
     def submit_and_wait(self, request_data: Dict[str, Any], timeout: int = 300) -> Dict[str, Any]:
         # Submit crawl job
-        response = requests.post(f"{self.base_url}/crawl", json=request_data, headers=self.headers)
+        response = requests.post(f"{self.base_url}/crawl", json=request_data, headers=self.headers, timeout=60)
         if response.status_code == 403:
             raise Exception("API token is invalid or missing")
         task_id = response.json()["task_id"]
@@ -26,7 +26,7 @@ class Crawl4AiTester:
             if time.time() - start_time > timeout:
                 raise TimeoutError(f"Task {task_id} did not complete within {timeout} seconds")
                 
-            result = requests.get(f"{self.base_url}/task/{task_id}", headers=self.headers)
+            result = requests.get(f"{self.base_url}/task/{task_id}", headers=self.headers, timeout=60)
             status = result.json()
             
             if status["status"] == "failed":
@@ -50,8 +50,8 @@ class Crawl4AiTester:
         response = requests.post(
             f"{self.base_url}/crawl_direct", 
             json=request_data, 
-            headers=self.headers
-        )
+            headers=self.headers, 
+        timeout=60)
         response.raise_for_status()
         return response.json()
 
