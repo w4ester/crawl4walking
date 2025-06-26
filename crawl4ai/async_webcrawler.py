@@ -34,8 +34,8 @@ from .utils import (
 )
 
 from urllib.parse import urlparse
-import random
 from .__version__ import __version__ as crawl4ai_version
+import secrets
 
 
 class AsyncWebCrawler:
@@ -780,7 +780,7 @@ class AsyncWebCrawler:
                 if domain in self._domain_last_hit:
                     time_since_last = current_time - self._domain_last_hit[domain]
                     if time_since_last < mean_delay:
-                        delay = mean_delay + random.uniform(0, max_range)
+                        delay = mean_delay + secrets.SystemRandom().uniform(0, max_range)
                         await asyncio.sleep(delay)
                 
                 self._domain_last_hit[domain] = current_time
