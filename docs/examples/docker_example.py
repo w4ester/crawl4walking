@@ -5,6 +5,7 @@ import sys
 import base64
 import os
 from typing import Dict, Any
+from security import safe_requests
 
 class Crawl4AiTester:
     def __init__(self, base_url: str = "http://localhost:11235", api_token: str = None):
@@ -26,7 +27,7 @@ class Crawl4AiTester:
             if time.time() - start_time > timeout:
                 raise TimeoutError(f"Task {task_id} did not complete within {timeout} seconds")
                 
-            result = requests.get(f"{self.base_url}/task/{task_id}", headers=self.headers)
+            result = safe_requests.get(f"{self.base_url}/task/{task_id}", headers=self.headers)
             status = result.json()
             
             if status["status"] == "failed":
@@ -67,7 +68,7 @@ def test_docker_deployment(version="basic"):
     max_retries = 5
     for i in range(max_retries):
         try:
-            health = requests.get(f"{tester.base_url}/health", timeout=10)
+            health = safe_requests.get(f"{tester.base_url}/health", timeout=10)
             print("Health check:", health.json())
             break
         except requests.exceptions.RequestException as e:
