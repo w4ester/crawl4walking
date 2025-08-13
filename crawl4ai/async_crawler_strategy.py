@@ -24,6 +24,7 @@ from .async_configs import BrowserConfig, CrawlerRunConfig
 from .async_logger import AsyncLogger
 from playwright_stealth import StealthConfig, stealth_async
 from .ssl_certificate import SSLCertificate
+from security import safe_command
 
 stealth_config = StealthConfig(
     webdriver=True,
@@ -144,8 +145,7 @@ class ManagedBrowser:
 
         # Start browser process
         try:
-            self.browser_process = subprocess.Popen(
-                args, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+            self.browser_process = safe_command.run(subprocess.Popen, args, stdout=subprocess.PIPE, stderr=subprocess.PIPE
             )
             # Monitor browser process output for errors
             asyncio.create_task(self._monitor_browser_process())
